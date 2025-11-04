@@ -1270,6 +1270,7 @@ public class SvgGraphics {
 							typeIdent.getValue());
 					pendingElements.get(0).setAttribute("plantuml:" + typeIdent.getKey().getSvgKeyAttributeName(),
 							typeIdent.getValue());
+					break;
 
 				}
 			}
@@ -1289,6 +1290,7 @@ public class SvgGraphics {
 							typeIdent.getValue());
 					pendingElements.get(0).setAttribute("plantuml:" + typeIdent.getKey().getSvgKeyAttributeName(),
 							typeIdent.getValue());
+					break;
 				}
 
 				// if (option.isInteractive())
@@ -1304,6 +1306,7 @@ public class SvgGraphics {
 							typeIdent.getValue());
 					pendingElements.get(0).setAttribute("plantuml:" + typeIdent.getKey().getSvgKeyAttributeName(),
 							typeIdent.getValue());
+					break;
 				}
 			}
 

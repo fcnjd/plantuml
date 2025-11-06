@@ -323,6 +323,7 @@ public class SvgGraphics {
 		// particularly with regard to the style.
 		svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 		svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+		svg.setAttribute("xmlns:plantuml", "http://plantuml.com/xmlns");
 		svg.setAttribute("version", "1.1");
 
 		if (option.getTitle() != null) {
@@ -352,6 +353,7 @@ public class SvgGraphics {
 			elt.setAttribute("ry", format(yRadius));
 			fillMe(elt);
 			styleMe(elt);
+			addPlantUmlType(elt, "ellipse");
 			addFilterShadowId(elt, deltaShadow);
 			getG().appendChild(elt);
 		}
@@ -493,6 +495,7 @@ public class SvgGraphics {
 		elt.setAttribute("height", format(height));
 		fillMe(elt);
 		styleMe(elt);
+		addPlantUmlType(elt, "rectangle");
 		return elt;
 	}
 
@@ -505,6 +508,7 @@ public class SvgGraphics {
 			elt.setAttribute("x2", format(x2));
 			elt.setAttribute("y2", format(y2));
 			styleMe(elt);
+			addPlantUmlType(elt, "line");
 			addFilterShadowId(elt, deltaShadow);
 			getG().appendChild(elt);
 		}
@@ -542,6 +546,7 @@ public class SvgGraphics {
 			elt.setAttribute("points", sb.toString());
 			fillMe(elt);
 			styleMe(elt);
+			addPlantUmlType(elt, "polygon");
 			addFilterShadowId(elt, deltaShadow);
 			getG().appendChild(elt);
 		}
@@ -606,6 +611,7 @@ public class SvgGraphics {
 			for (Map.Entry<String, String> ent : attributes.entrySet())
 				elt.setAttribute(ent.getKey(), ent.getValue());
 
+			addPlantUmlType(elt, "text");
 			elt.setTextContent(text);
 			// elt.appendChild(document.createCDATASection(text));
 			getG().appendChild(elt);
@@ -765,13 +771,18 @@ public class SvgGraphics {
 			elt.setAttribute("d", sb.toString().trim());
 			styleMe(elt);
 			fillMe(elt);
+			addPlantUmlType(elt, "path");
 			final String id = path.getComment();
-			if (id != null)
+			if (id != null) {
 				elt.setAttribute("id", id);
+				elt.setAttribute("plantuml:id", id);
+			}
 
 			final String codeLine = path.getCodeLine();
-			if (codeLine != null)
+			if (codeLine != null) {
 				elt.setAttribute("codeLine", codeLine);
+				elt.setAttribute("plantuml:source-line", codeLine);
+			}
 
 			addFilterShadowId(elt, deltaShadow);
 			getG().appendChild(elt);
@@ -786,6 +797,10 @@ public class SvgGraphics {
 		} else {
 			elt.setAttribute("fill", fill);
 		}
+	}
+
+	private void addPlantUmlType(Element elt, String type) {
+		elt.setAttribute("plantuml:type", type);
 	}
 
 	private void addFilterShadowId(final Element elt, double deltaShadow) {
@@ -1239,18 +1254,24 @@ public class SvgGraphics {
 				case DATA_PARTICIPANT_1:
 				case DATA_ENTITY_1_UID:
 					pendingElements.get(0).setAttribute("data-entity-1", typeIdent.getValue());
+					pendingElements.get(0).setAttribute("plantuml:entity-1", typeIdent.getValue());
 					break;
 				case DATA_PARTICIPANT_2:
 				case DATA_ENTITY_2_UID:
 					pendingElements.get(0).setAttribute("data-entity-2", typeIdent.getValue());
+					pendingElements.get(0).setAttribute("plantuml:entity-2", typeIdent.getValue());
 					break;
 
 				case CLASS:
 				case DATA_SOURCE_LINE:
 				case DATA_QUALIFIED_NAME:
 				case DATA_ENTITY_UID:
+				case DATA_VISIBILITY_MODIFIER:
 					pendingElements.get(0).setAttribute(typeIdent.getKey().getSvgKeyAttributeName(),
 							typeIdent.getValue());
+					pendingElements.get(0).setAttribute("plantuml:" + typeIdent.getKey().getSvgKeyAttributeName(),
+							typeIdent.getValue());
+					break;
 
 				}
 			}
@@ -1266,8 +1287,12 @@ public class SvgGraphics {
 				case DATA_UID:
 				case ID:
 				case DATA_SOURCE_LINE:
+				case DATA_VISIBILITY_MODIFIER:
 					pendingElements.get(0).setAttribute(typeIdent.getKey().getSvgKeyAttributeName(),
 							typeIdent.getValue());
+					pendingElements.get(0).setAttribute("plantuml:" + typeIdent.getKey().getSvgKeyAttributeName(),
+							typeIdent.getValue());
+					break;
 				}
 
 				// if (option.isInteractive())
@@ -1281,6 +1306,9 @@ public class SvgGraphics {
 				case DATA_PARTICIPANT_2:
 					pendingElements.get(0).setAttribute(typeIdent.getKey().getSvgKeyAttributeName(),
 							typeIdent.getValue());
+					pendingElements.get(0).setAttribute("plantuml:" + typeIdent.getKey().getSvgKeyAttributeName(),
+							typeIdent.getValue());
+					break;
 				}
 			}
 

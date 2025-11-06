@@ -83,7 +83,7 @@ public enum VisibilityModifier {
 	public UDrawable getUDrawable(final int size, final HColor foregroundColor, final HColor backgoundColor) {
 		return new UDrawable() {
 			public void drawU(UGraphic ug) {
-				drawInternal(ug, size, foregroundColor, backgoundColor, 0, 0);
+				drawWithGroup(ug, size, foregroundColor, backgoundColor, 0, 0);
 			}
 
 		};
@@ -106,9 +106,45 @@ public enum VisibilityModifier {
 				if (withInvisibleRectanble)
 					ug.apply(HColors.none()).draw(URectangle.build(size * 2, size));
 
-				drawInternal(ug, size, foregroundColor, backgoundColor, 0, 0);
+				drawWithGroup(ug, size, foregroundColor, backgoundColor, 0, 0);
 			}
 		};
+	}
+
+	private void drawWithGroup(UGraphic ug, int size, final HColor foregroundColor, final HColor backgoundColor,
+			double x, double y) {
+		// Create a group with semantic information about the visibility modifier
+		final net.sourceforge.plantuml.klimt.UGroup group = new net.sourceforge.plantuml.klimt.UGroup();
+		group.put(net.sourceforge.plantuml.klimt.UGroupType.DATA_VISIBILITY_MODIFIER, getVisibilityName());
+		
+		ug.startGroup(group);
+		drawInternal(ug, size, foregroundColor, backgoundColor, x, y);
+		ug.closeGroup();
+	}
+
+	private String getVisibilityName() {
+		switch (this) {
+		case PRIVATE_FIELD:
+			return "private-field";
+		case PROTECTED_FIELD:
+			return "protected-field";
+		case PACKAGE_PRIVATE_FIELD:
+			return "package-field";
+		case PUBLIC_FIELD:
+			return "public-field";
+		case PRIVATE_METHOD:
+			return "private-method";
+		case PROTECTED_METHOD:
+			return "protected-method";
+		case PACKAGE_PRIVATE_METHOD:
+			return "package-method";
+		case PUBLIC_METHOD:
+			return "public-method";
+		case IE_MANDATORY:
+			return "ie-mandatory";
+		default:
+			return "unknown";
+		}
 	}
 
 	private void drawInternal(UGraphic ug, int size, final HColor foregroundColor, final HColor backgoundColor,

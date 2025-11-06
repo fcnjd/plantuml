@@ -133,6 +133,53 @@ public class PlantUMLNamespaceTest {
 				"Should find at least one group with plantuml:data-participant attribute");
 	}
 
+	@Test
+	void testVisibilityModifiersHaveSemanticAttributes() throws Exception {
+		final String diagramText = "@startuml\n" +
+				"class Animal {\n" +
+				"  -name: String\n" +
+				"  #age: int\n" +
+				"  +speak(): void\n" +
+				"}\n" +
+				"@enduml";
+		
+		final String svg = generateSVG(diagramText);
+		final Document doc = parseXML(svg);
+		
+		// Check that visibility modifiers have semantic group attributes
+		NodeList groups = doc.getElementsByTagName("g");
+		assertTrue(groups.getLength() > 0, "Should have at least one group");
+		
+		boolean foundPrivateField = false;
+		boolean foundProtectedField = false;
+		boolean foundPublicMethod = false;
+		
+		for (int i = 0; i < groups.getLength(); i++) {
+			Element group = (Element) groups.item(i);
+			
+			// Check for plantuml:data-visibility-modifier attribute
+			if (group.hasAttribute("plantuml:data-visibility-modifier")) {
+				String visibility = group.getAttribute("plantuml:data-visibility-modifier");
+				
+				if ("private-field".equals(visibility)) {
+					foundPrivateField = true;
+					// Should also have non-namespaced version
+					assertEquals(visibility, group.getAttribute("data-visibility-modifier"));
+				} else if ("protected-field".equals(visibility)) {
+					foundProtectedField = true;
+					assertEquals(visibility, group.getAttribute("data-visibility-modifier"));
+				} else if ("public-method".equals(visibility)) {
+					foundPublicMethod = true;
+					assertEquals(visibility, group.getAttribute("data-visibility-modifier"));
+				}
+			}
+		}
+		
+		assertTrue(foundPrivateField, "Should find private field visibility modifier");
+		assertTrue(foundProtectedField, "Should find protected field visibility modifier");
+		assertTrue(foundPublicMethod, "Should find public method visibility modifier");
+	}
+
 	private String generateSVG(String diagramText) throws Exception {
 		final SourceStringReader ssr = new SourceStringReader(diagramText, UTF_8);
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();

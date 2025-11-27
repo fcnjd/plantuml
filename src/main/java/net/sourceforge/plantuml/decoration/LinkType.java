@@ -284,26 +284,21 @@ public class LinkType {
 			return "redefines";
 		if (decor1 == LinkDecor.DEFINEDBY || decor2 == LinkDecor.DEFINEDBY)
 			return "definedby";
-		if (decor1 == LinkDecor.ARROW || decor2 == LinkDecor.ARROW)
-			return "dependency";
-		if (decor1 == LinkDecor.ARROW_TRIANGLE || decor2 == LinkDecor.ARROW_TRIANGLE)
+		if (decor1 == LinkDecor.ARROW || decor2 == LinkDecor.ARROW
+				|| decor1 == LinkDecor.ARROW_TRIANGLE || decor2 == LinkDecor.ARROW_TRIANGLE)
 			return "dependency";
 		if (decor1 == LinkDecor.NOT_NAVIGABLE || decor2 == LinkDecor.NOT_NAVIGABLE)
 			return "not-navigable";
-		if (decor1 == LinkDecor.CROWFOOT || decor2 == LinkDecor.CROWFOOT)
+		if (decor1 == LinkDecor.CROWFOOT || decor2 == LinkDecor.CROWFOOT
+				|| decor1 == LinkDecor.CIRCLE_CROWFOOT || decor2 == LinkDecor.CIRCLE_CROWFOOT
+				|| decor1 == LinkDecor.LINE_CROWFOOT || decor2 == LinkDecor.LINE_CROWFOOT)
 			return "crowfoot";
-		if (decor1 == LinkDecor.CIRCLE_CROWFOOT || decor2 == LinkDecor.CIRCLE_CROWFOOT)
-			return "crowfoot";
-		if (decor1 == LinkDecor.LINE_CROWFOOT || decor2 == LinkDecor.LINE_CROWFOOT)
-			return "crowfoot";
-		if (decor1 == LinkDecor.CIRCLE_LINE || decor2 == LinkDecor.CIRCLE_LINE)
-			return "association";
-		if (decor1 == LinkDecor.DOUBLE_LINE || decor2 == LinkDecor.DOUBLE_LINE)
+		if (decor1 == LinkDecor.CIRCLE_LINE || decor2 == LinkDecor.CIRCLE_LINE
+				|| decor1 == LinkDecor.DOUBLE_LINE || decor2 == LinkDecor.DOUBLE_LINE
+				|| (decor1 == LinkDecor.NONE && decor2 == LinkDecor.NONE))
 			return "association";
 		if (decor1 == LinkDecor.PLUS || decor2 == LinkDecor.PLUS)
 			return "nested";
-		if (decor1 == LinkDecor.NONE && decor2 == LinkDecor.NONE)
-			return "association";
 		return null;
 	}
 
